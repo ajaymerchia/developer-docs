@@ -188,6 +188,13 @@ def standard_frontmatter_validations(file_path: str, data: dict):
     if len(duplicate_redirects) != 0:
         print(f'Multiple files have the same redirects: {duplicate_redirects}. Found duplicate in {file_path}')
         sys.exit(1)
+
+    if data.get("installation_link") and data.get("fidelity") != Fidelity.TEMPLATE.name:
+        print(
+            f"{file_path} should be marked as a template since it has an installation link."
+        )
+        sys.exit(1)
+
     ALL_REDIRECTS.update(unique_redirects)
 
 def load_file(file_path):
@@ -199,7 +206,7 @@ def load_file(file_path):
             print(f'Clearing {DIRECTORY_TO_CLEAR} due to broken YAML')
             clear_directory(DIRECTORY_TO_CLEAR)
             sys.exit(1)
-    
+
 
 def validate_connector_schema(file_path):
     data = load_file(file_path)
